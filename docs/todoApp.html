@@ -50,276 +50,288 @@
 		<div class="pure-u-1-4">&nbsp;</div>
 	</div>
 
-	<script type="text/javascript">
-/*	
-unknownState                    - onload     - processOnload     - onloadSuccess                 - readyForAdd 
-readyForAdd                     - addTodo    - processAddTodo    - addTodoSuccessNoneSelected    - readyForAddSelect
-readyForAddSelect               - addTodo    - processAddTodo    - addTodoSuccessNoneSelected    - readyForAddSelect
-readyForAddSelect               - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete 
-readyForAddSelect               - changeTodo - processChangeTodo - changeTodoSuccessAllSelected  - readyForAddUnselectDelete												
-readyForAddUnselectDelete       - addTodo    - processAddTodo    - addTodoSuccessSomeSelected    - readyForAddSelectUnselectDelete
-readyForAddUnselectDelete       - changeTodo - processchangeTodo - changeTodoSuccessNoneSelected - readyForAddSelect
-readyForAddUnselectDelete       - changeTodo - processchangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete
-readyForAddUnselectDelete       - deleteTodo - processDeleteTodo - deleteTodoSuccessAllDeleted   - readyForAdd											 
-readyForAddSelectUnselectDelete - addTodo    - processAddTodo    - addTodoSuccessSomeSelected    - readyForAddUnselectDelete
-readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessAllSelected  - readyForAddUnselectDelete
-readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete															 
-readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessNoneSelected - readyForAddSelect
-readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete															 
-readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuccessNoneSelected - readyForAddSelect
-*/
+<script type = "text/javascript">
+    /*	
+    unknownState                    - onload     - processOnload     - onloadSuccess                 - readyForAdd 
+    readyForAdd                     - addTodo    - processAddTodo    - addTodoSuccessNoneSelected    - readyForAddSelect
+    readyForAddSelect               - addTodo    - processAddTodo    - addTodoSuccessNoneSelected    - readyForAddSelect
+    readyForAddSelect               - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete 
+    readyForAddSelect               - changeTodo - processChangeTodo - changeTodoSuccessAllSelected  - readyForAddUnselectDelete												
+    readyForAddUnselectDelete       - addTodo    - processAddTodo    - addTodoSuccessSomeSelected    - readyForAddSelectUnselectDelete
+    readyForAddUnselectDelete       - changeTodo - processchangeTodo - changeTodoSuccessNoneSelected - readyForAddSelect
+    readyForAddUnselectDelete       - changeTodo - processchangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete
+    readyForAddUnselectDelete       - deleteTodo - processDeleteTodo - deleteTodoSuccessAllDeleted   - readyForAdd											 
+    readyForAddSelectUnselectDelete - addTodo    - processAddTodo    - addTodoSuccessSomeSelected    - readyForAddUnselectDelete
+    readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessAllSelected  - readyForAddUnselectDelete
+    readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete															 
+    readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessNoneSelected - readyForAddSelect
+    readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete															 
+    readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuccessNoneSelected - readyForAddSelect
+    */
 
-const appData = {
-	todoText: function(){
-				return document.getElementsByName("addTodo")[0].value;
-		      },
-	selectedCount: function(){
-		           	 return checkboxGroupInfo().selectedCount;
-	               },
-	itemsCount: function(){
-		           	return checkboxGroupInfo().total;
-	               },
-   	selectedItems: function(){
-    	return checkboxGroupInfo().selectedItems;
-       },
+    const appData = {
+        todoText: function() {
+            return document.getElementsByName("addTodo")[0].value;
+        },
+        selectedCount: function() {
+            return checkboxGroupInfo().selectedCount;
+        },
+        itemsCount: function() {
+            return checkboxGroupInfo().total;
+        },
+        selectedItems: function() {
+            return checkboxGroupInfo().selectedItems;
+        },
+    };
+
+const appStates = {
+    readyForAdd: function(e) {
+
+        document.getElementById("addTodoView").style.display = "block";
+        document.getElementById("changeTodoView").style.display = "none";
+        document.getElementById("deleteTodoView").style.display = "none";
+        document.getElementById("currentState").innerHTML = e.type + ' => readyForAdd';
+    },
+    readyForAddSelect: function(e) {
+
+
+        document.getElementById("addTodo").getElementsByTagName("input")[0].value = "";
+        document.getElementById("addTodo").getElementsByTagName("input")[0].focus();
+        document.getElementById("addTodoView").style.display = "block";
+        document.getElementById("changeTodoView").style.display = "block";
+        document.getElementById("deleteTodoView").style.display = "none";
+        document.getElementById("currentState").innerHTML = e.type + ' => readyForAddSelect';
+    },
+    readyForAddUnselectDelete: function(e) {
+
+        document.getElementById("addTodo").getElementsByTagName("input")[0].value = "";
+        document.getElementById("addTodo").getElementsByTagName("input")[0].focus();
+        document.getElementById("addTodoView").style.display = "block";
+        document.getElementById("changeTodoView").style.display = "block";
+        document.getElementById("deleteTodoView").style.display = "block";
+        document.getElementById("currentState").innerHTML = e.type + ' => readyForAddUnselectDelete';
+    },
+    readyForAddSelectUnselectDelete: function(e) {
+
+        document.getElementById("addTodo").getElementsByTagName("input")[0].value = "";
+        document.getElementById("addTodo").getElementsByTagName("input")[0].focus();
+        document.getElementById("addTodoView").style.display = "block";
+        if (appData.itemsCount() > 0) document.getElementById("changeTodoView").style.display = "block";
+        else document.getElementById("changeTodoView").style.display = "none";
+        document.getElementById("deleteTodoView").style.display = "block";
+        document.getElementById("currentState").innerHTML = e.type + ' => readyForAddSelectUnselectDelete';
+    }
+
 };
 
-const states = {
-		 readyForAdd: function(e){
+const appEvents = {
+    onload: {
+        process: function(e) {
+            var props = {
+                id: "addTodo",
+                todoText: "",
+                label: "Add a to-do item:"
+            };
+            createInputTextElement(props);
+            return new CustomEvent('onloadSuccess');
+        }
+    },
+    onloadSuccess: {
+        nextState: function(e) {
+            return appStates.readyForAdd(e);
+        }
+    },
+    addTodo: {
+        process: function(e) {
 
-			 document.getElementById("addTodoView").style.display = "block";
- 			 document.getElementById("changeTodoView").style.display = "none";
- 			 document.getElementById("deleteTodoView").style.display = "none";
- 			document.getElementById("currentState").innerHTML=e.type + ' => readyForAdd';
- 		},
-		 readyForAddSelect: function(e){
+            e.detail.id = "changeTodo";
+            e.detail.todoText = appData.todoText();
+            e.detail.itemsCount = appData.itemsCount();
+            //e.detail.selTodos = appData.selectedItems();
+            createInputCheckboxElement(e.detail);
 
-			 
-			 document.getElementById("addTodo").getElementsByTagName("input")[0].value="";
-			 document.getElementById("addTodo").getElementsByTagName("input")[0].focus();
-			 document.getElementById("addTodoView").style.display = "block";
-			 document.getElementById("changeTodoView").style.display = "block";
-			 document.getElementById("deleteTodoView").style.display = "none";
-	 			document.getElementById("currentState").innerHTML=e.type + ' => readyForAddSelect';
-		},
-		 readyForAddUnselectDelete: function(e){
-			 
-			 document.getElementById("addTodo").getElementsByTagName("input")[0].value="";
-			 document.getElementById("addTodo").getElementsByTagName("input")[0].focus();
-			 document.getElementById("addTodoView").style.display = "block";
-			 document.getElementById("changeTodoView").style.display = "block";
-			 document.getElementById("deleteTodoView").style.display = "block";
-	 			document.getElementById("currentState").innerHTML=e.type + ' => readyForAddUnselectDelete';
-		},		
-		readyForAddSelectUnselectDelete: function(e){ 
-
-			 document.getElementById("addTodo").getElementsByTagName("input")[0].value="";
-			 document.getElementById("addTodo").getElementsByTagName("input")[0].focus();
-			 document.getElementById("addTodoView").style.display = "block";
-			 if(appData.itemsCount()>0)document.getElementById("changeTodoView").style.display = "block";
-			 else document.getElementById("changeTodoView").style.display = "none";
-			 document.getElementById("deleteTodoView").style.display = "block";
-	 			document.getElementById("currentState").innerHTML=e.type + ' => readyForAddSelectUnselectDelete';
-		}
-		 
-};
-
-const events = {
-        onload: {
-            process: function(e) {  
-             	var props = {id:"addTodo", todoText:"", label:"Add a to-do item:"};
-				createInputTextElement(props);
-                return new CustomEvent('onloadSuccess');
+            var evttype = 'addTodoSuccessNoneSelected';
+            if (appData.selectedCount() > 0 &&
+                appData.itemsCount() - appData.selectedCount() > 0) {
+                evttype = 'addTodoSuccessSomeSelected';
             }
-        },
-        onloadSuccess: {
-            nextState: function(e) {
-                return states.readyForAdd(e);
+            return new CustomEvent(evttype);
+        }
+    },
+    addTodoSuccessNoneSelected: {
+
+        nextState: function(e) {
+
+            return appStates.readyForAddSelect(e);
+        }
+    },
+    addTodoSuccessSomeSelected: {
+
+        nextState: function(e) {
+            return appStates.readyForAddSelectUnselectDelete(e);
+        }
+    },
+    changeTodo: {
+        process: function(e) {
+            if (document.getElementById("deleteTodo").getElementsByTagName("input").length == 0) {
+                e.detail.id = "deleteTodo";
+                createInputButtonElement(e.detail);
             }
-        },
-        addTodo: {
-            process: function(e) {
-	   			 
-				 e.detail.id="changeTodo";
-				 e.detail.todoText=appData.todoText();
-				 e.detail.itemsCount=appData.itemsCount();
-				 //e.detail.selTodos = appData.selectedItems();
-				 createInputCheckboxElement(e.detail);
-				 
-                var evttype = 'addTodoSuccessNoneSelected';
-                if(appData.selectedCount()>0 &&
-                		appData.itemsCount()-appData.selectedCount()>0){
-                	evttype =  'addTodoSuccessSomeSelected'; 
+
+            var evttype = 'changeTodoSuccessNoneSelected';
+            if (appData.selectedCount() > 0) {
+                if (appData.selectedCount() == appData.itemsCount()) {
+                    evttype = 'changeTodoSuccessAllSelected';
+                } else if (appData.itemsCount() - appData.selectedCount() > 0) {
+                    evttype = 'changeTodoSuccessSomeSelected';
                 }
-                return new CustomEvent(evttype);
             }
-        },
-        addTodoSuccessNoneSelected: {
+            return new CustomEvent(evttype);
+        }
+    },
+    changeTodoSuccessSomeSelected: {
 
-            nextState: function(e) {
-                
-                return states.readyForAddSelect(e);
-            }
-        },
-        addTodoSuccessSomeSelected: {
+        nextState: function(e) {
+            return appStates.readyForAddSelectUnselectDelete(e);
+        }
+    },
+    changeTodoSuccessAllSelected: {
 
-            nextState: function(e) {
-                return states.readyForAddSelectUnselectDelete(e);
-            }
-        },
-        changeTodo: {
-            process: function(e) {
-    			if(document.getElementById("deleteTodo").getElementsByTagName("input").length==0){
-   				 e.detail.id="deleteTodo";
-   				 createInputButtonElement(e.detail);
-   				}
+        nextState: function(e) {
+            return appStates.readyForAddUnselectDelete(e);
+        }
+    },
+    changeTodoSuccessNoneSelected: {
 
-                var evttype = 'changeTodoSuccessNoneSelected';
-                if(appData.selectedCount()>0){
-	                if(appData.selectedCount()==appData.itemsCount()){
-	                	evttype =  'changeTodoSuccessAllSelected';
-	                }else if(appData.itemsCount()-appData.selectedCount()>0){
-	                	evttype =  'changeTodoSuccessSomeSelected';
-	                }
-                }
-                return new CustomEvent(evttype);
-            }
-        },
-        changeTodoSuccessSomeSelected: {
+        nextState: function(e) {
+            return appStates.readyForAddSelect(e);
+        }
+    },
+    deleteTodo: {
+        process: function(e) {
+            e.detail.id = 'changeTodo';
+            e.detail.itemsCount = appData.itemsCount();
+            e.detail.selTodos = appData.selectedItems();
+            deleteInputCheckboxElements(e.detail);
+            let evttype = '';
+            if (appData.itemsCount() > 0) evttype = 'deleteTodoSuccessNoneSelected';
+            else evttype = 'deleteTodoSuccessAllDeleted';
+            return new CustomEvent(evttype);
+        }
 
-            nextState: function(e) {
-                return states.readyForAddSelectUnselectDelete(e);
-            }
-        },
-        changeTodoSuccessAllSelected: {
-
-            nextState: function(e) {
-                return states.readyForAddUnselectDelete(e);
-            }
-        },
-        changeTodoSuccessNoneSelected: {
-
-            nextState: function(e) {
-                return states.readyForAddSelect(e);
-            }
-        },
-        deleteTodo: {
-            process: function(e) {
-            	e.detail.id='changeTodo';
-				 e.detail.itemsCount=appData.itemsCount();
-				 e.detail.selTodos = appData.selectedItems();
-				 deleteInputCheckboxElements(e.detail);
-                let evttype = '';
-                if(appData.itemsCount()>0)evttype='deleteTodoSuccessNoneSelected';
-                else evttype = 'deleteTodoSuccessAllDeleted'; 
-                return new CustomEvent(evttype);
-            }
-
-        },
-        deleteTodoSuccessNoneSelected: {
-            nextState: function(e) {
-                return states.readyForAddSelect(e);
-            }
-        },
+    },
+    deleteTodoSuccessNoneSelected: {
+        nextState: function(e) {
+            return appStates.readyForAddSelect(e);
+        }
+    },
 
     deleteTodoSuccessAllDeleted: {
         nextState: function(e) {
-            return states.readyForAdd(e);
+            return appStates.readyForAdd(e);
         }
     }
 
-};        
-		function checkboxGroupInfo(){
-            const elems = document.getElementById("changeTodo").getElementsByTagName("input");
-            let itemsCount = elems.length;
-            let selectedItemsArray = new Array(); 
-            for (let elem of elems) {
-            	if(elem.checked){
-            		selectedItemsArray.push(elem.value);
-            	}
-            }
-            let res = {selectedCount:selectedItemsArray.length, total:itemsCount, selectedItems:selectedItemsArray};
-            return res;
-		}
+};
 
-        function handleAppEvent(e, customEventName){
-            
-            var todoEvent = new CustomEvent(customEventName, {detail:{value:e.value}});
-            stateTransitionsManager(todoEvent);
-        };
-		
-		function stateTransitionsManager(todoEvent) {
-			var todoEventAft = events[todoEvent.type].process(todoEvent);
-			events[todoEventAft.type].nextState(todoEventAft);
-		}
-		
- function createInputTextElement(props){
-	 var oldNode = document.getElementById(props.id);
-	oldNode.appendChild(createInputTxtElem(props.id, props.label, props.todoText));
- }
- 
- function createInputCheckboxElement(props){
-	 
-	 var oldNode = document.getElementById(props.id);
+function checkboxGroupInfo() {
+    const elems = document.getElementById("changeTodo").getElementsByTagName("input");
+    let itemsCount = elems.length;
+    let selectedItemsArray = new Array();
+    for (let elem of elems) {
+        if (elem.checked) {
+            selectedItemsArray.push(elem.value);
+        }
+    }
+    let res = {
+        selectedCount: selectedItemsArray.length,
+        total: itemsCount,
+        selectedItems: selectedItemsArray
+    };
+    return res;
+}
 
-	 var maxId = oldNode.getElementsByTagName("input").length + 1;
-	 var e = document.createElement("input");
-	 oldNode.appendChild(createCheckBoxElement(props.id, props.todoText, props.itemsCount));	 
- }
- 
- function deleteInputCheckboxElements(props){
-	 
-	 var oldNode = document.getElementById(props.id);
+function handleAppEvent(e, customEventName) {
 
-	 var es = oldNode.getElementsByTagName("div");
-	 props.selTodos.forEach(i => oldNode.removeChild(es.namedItem("div"+i)));
- }
+    var todoEvent = new CustomEvent(customEventName, {
+        detail: {
+            value: e.value
+        }
+    });
+    stateTransitionsManager(todoEvent);
+};
 
- function createCheckBoxElement(name, label, maxId){
-	 var de = document.createElement("div");
-	 de.setAttribute("id", "div"+(maxId+1));
-	 var e = document.createElement("input");
-	 
-	 e.setAttribute("name", name);
-	 e.setAttribute("type", "checkbox");
-	 e.setAttribute("value", maxId+1);
-	 e.setAttribute("onchange", "handleAppEvent(event, \'changeTodo\')");
-	 e = de.appendChild(e);
-	 
-	 var lbl = document.createElement("label");
-	 lbl.setAttribute("id", "lbl"+(maxId+1));
-	 lbl.innerText = label;
-	 e.insertAdjacentElement("afterEnd", lbl)
+function stateTransitionsManager(todoEvent) {
+    var todoEventAft = appEvents[todoEvent.type].process(todoEvent);
+    appEvents[todoEventAft.type].nextState(todoEventAft);
+}
 
-	 return de;
- }
- 
- function createInputTxtElem(name, label, textValue){
-	 var de = document.createElement("div");
-	 de.setAttribute("id", name+"_div");
-	 var e = document.createElement("input");
-	 
-	 e.setAttribute("name", name);
-	 e.setAttribute("type", "text");
-	 e.setAttribute("value", textValue);
-	 e.setAttribute("onchange", "handleAppEvent(event, \'"+name+"\')");
-	 e = de.appendChild(e);
-	 
-	 var lbl = document.createElement("label");
-	 lbl.setAttribute("id", name+"_lbl");
-	 lbl.innerText = label;
-	 e.insertAdjacentElement("beforeBegin", lbl)
+function createInputTextElement(props) {
+    var oldNode = document.getElementById(props.id);
+    oldNode.appendChild(createInputTxtElem(props.id, props.label, props.todoText));
+}
 
-	 return de;
- }
- 
- function createInputButtonElement(props){
-	 var buttonComponentHtml = '<input name="deleteTodo" type="button" class="pure-button" value="Delete" onclick="handleAppEvent(event, \'deleteTodo\')">';
-	 var oldNode = document.getElementById(props.id);
-	 oldNode.innerHTML = buttonComponentHtml;
- }
- 
+function createInputCheckboxElement(props) {
+
+    var oldNode = document.getElementById(props.id);
+
+    var maxId = oldNode.getElementsByTagName("input").length + 1;
+    var e = document.createElement("input");
+    oldNode.appendChild(createCheckBoxElement(props.id, props.todoText, props.itemsCount));
+}
+
+function deleteInputCheckboxElements(props) {
+
+    var oldNode = document.getElementById(props.id);
+
+    var es = oldNode.getElementsByTagName("div");
+    props.selTodos.forEach(i => oldNode.removeChild(es.namedItem("div" + i)));
+}
+
+function createCheckBoxElement(name, label, maxId) {
+    var de = document.createElement("div");
+    de.setAttribute("id", "div" + (maxId + 1));
+    var e = document.createElement("input");
+
+    e.setAttribute("name", name);
+    e.setAttribute("type", "checkbox");
+    e.setAttribute("value", maxId + 1);
+    e.setAttribute("onchange", "handleAppEvent(event, \'changeTodo\')");
+    e = de.appendChild(e);
+
+    var lbl = document.createElement("label");
+    lbl.setAttribute("id", "lbl" + (maxId + 1));
+    lbl.innerText = label;
+    e.insertAdjacentElement("afterEnd", lbl)
+
+    return de;
+}
+
+function createInputTxtElem(name, label, textValue) {
+    var de = document.createElement("div");
+    de.setAttribute("id", name + "_div");
+    var e = document.createElement("input");
+
+    e.setAttribute("name", name);
+    e.setAttribute("type", "text");
+    e.setAttribute("value", textValue);
+    e.setAttribute("onchange", "handleAppEvent(event, \'" + name + "\')");
+    e = de.appendChild(e);
+
+    var lbl = document.createElement("label");
+    lbl.setAttribute("id", name + "_lbl");
+    lbl.innerText = label;
+    e.insertAdjacentElement("beforeBegin", lbl)
+
+    return de;
+}
+
+function createInputButtonElement(props) {
+    var buttonComponentHtml = '<input name="deleteTodo" type="button" class="pure-button" value="Delete" onclick="handleAppEvent(event, \'deleteTodo\')">';
+    var oldNode = document.getElementById(props.id);
+    oldNode.innerHTML = buttonComponentHtml;
+}
+
 </script>
-
 </body>
 </html>
