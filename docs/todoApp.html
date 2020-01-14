@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>todomvc-revisited, a Design Pattern for UI Development</title>
+<title>A Design Pattern for UI Development</title>
 <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -69,20 +69,20 @@
     readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuccessNoneSelected - readyForAddSelect
     */
 
-    const appData = {
-        todoText: function() {
-            return document.getElementsByName("addTodo")[0].value;
-        },
-        selectedCount: function() {
-            return checkboxGroupInfo().selectedCount;
-        },
-        itemsCount: function() {
-            return checkboxGroupInfo().total;
-        },
-        selectedItems: function() {
-            return checkboxGroupInfo().selectedItems;
-        },
-    };
+const appData = {
+    todoText: function() {
+        return document.getElementsByName("addTodo").item(0).value;
+    },
+    selectedCount: function() {
+        return appData.selectedItems().length;
+    },
+    itemsCount: function() {
+        return document.getElementsByName("changeTodo").length;
+    },
+    selectedItems: function() {
+        return Array.from(document.getElementsByName("changeTodo")).filter(e => e.checked).map(e => e.value);
+    }
+};
 
 const appStates = {
     readyForAdd: function(e) {
@@ -177,7 +177,7 @@ const appEvents = {
                 e.detail.id = "deleteTodo";
                 createInputButtonElement(e.detail);
             }
-
+            console.log("??befbef toal "+appData.itemsCount()+" >> selTodos "+appData.selectedItems());
             var evttype = 'changeTodoSuccessNoneSelected';
             if (appData.selectedCount() > 0) {
                 if (appData.selectedCount() == appData.itemsCount()) {
@@ -186,6 +186,7 @@ const appEvents = {
                     evttype = 'changeTodoSuccessSomeSelected';
                 }
             }
+            
             return new CustomEvent(evttype);
         }
     },
@@ -212,9 +213,14 @@ const appEvents = {
             e.detail.id = 'changeTodo';
             e.detail.itemsCount = appData.itemsCount();
             e.detail.selTodos = appData.selectedItems();
+            console.log(">>bef toal "+appData.itemsCount()+" >> selTodos "+appData.selectedItems());
             deleteInputCheckboxElements(e.detail);
             let evttype = '';
-            if (appData.itemsCount() > 0) evttype = 'deleteTodoSuccessNoneSelected';
+            console.log(">>aft toal "+appData.itemsCount()+" >> sel "+appData.selectedCount());
+            if (appData.itemsCount() > 0 &&
+            		appData.selectedCount()==0) {
+            	evttype = 'deleteTodoSuccessNoneSelected';
+            }
             else evttype = 'deleteTodoSuccessAllDeleted';
             return new CustomEvent(evttype);
         }
@@ -233,23 +239,6 @@ const appEvents = {
     }
 
 };
-
-function checkboxGroupInfo() {
-    const elems = document.getElementById("changeTodo").getElementsByTagName("input");
-    let itemsCount = elems.length;
-    let selectedItemsArray = new Array();
-    for (let elem of elems) {
-        if (elem.checked) {
-            selectedItemsArray.push(elem.value);
-        }
-    }
-    let res = {
-        selectedCount: selectedItemsArray.length,
-        total: itemsCount,
-        selectedItems: selectedItemsArray
-    };
-    return res;
-}
 
 function handleAppEvent(e, customEventName) {
 
@@ -284,8 +273,7 @@ function deleteInputCheckboxElements(props) {
 
     var oldNode = document.getElementById(props.id);
 
-    var es = oldNode.getElementsByTagName("div");
-    props.selTodos.forEach(i => oldNode.removeChild(es.namedItem("div" + i)));
+    props.selTodos.forEach(i => oldNode.removeChild(document.getElementById("div" + i)));
 }
 
 function createCheckBoxElement(name, label, maxId) {
