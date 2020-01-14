@@ -126,14 +126,14 @@ const appStates = {
 
 const appEvents = {
     onload: {
-        process: function(e) {
+        process: function(e, callbackFn) {
             var props = {
                 id: "addTodo",
                 todoText: "",
                 label: "Add a to-do item:"
             };
             createInputTextElement(document.getElementById("addTodo"), props);
-            return new CustomEvent('onloadSuccess');
+            callbackFn(new CustomEvent('onloadSuccess'));
         }
     },
     onloadSuccess: {
@@ -142,12 +142,11 @@ const appEvents = {
         }
     },
     addTodo: {
-        process: function(e) {
+        process: function(e, callbackFn) {
 
             e.detail.id = "changeTodo";
             e.detail.todoText = appData.todoText();
             e.detail.itemsCount = appData.itemsCount();
-            //e.detail.selTodos = appData.selectedItems();
             createInputCheckboxElement(document.getElementById("changeTodo"), e.detail);
 
             var evttype = 'addTodoSuccessNoneSelected';
@@ -155,7 +154,7 @@ const appEvents = {
                 appData.itemsCount() - appData.selectedCount() > 0) {
                 evttype = 'addTodoSuccessSomeSelected';
             }
-            return new CustomEvent(evttype);
+            callbackFn(new CustomEvent(evttype));
         }
     },
     addTodoSuccessNoneSelected: {
@@ -172,7 +171,7 @@ const appEvents = {
         }
     },
     changeTodo: {
-        process: function(e) {
+        process: function(e, callbackFn) {
             if (document.getElementById("deleteTodo").getElementsByTagName("input").length == 0) {
                 e.detail.id = "deleteTodo";
                 createInputButtonElement(document.getElementById("deleteTodo"), e.detail);
@@ -185,8 +184,7 @@ const appEvents = {
                     evttype = 'changeTodoSuccessSomeSelected';
                 }
             }
-            
-            return new CustomEvent(evttype);
+            callbackFn(new CustomEvent(evttype));
         }
     },
     changeTodoSuccessSomeSelected: {
@@ -208,7 +206,7 @@ const appEvents = {
         }
     },
     deleteTodo: {
-        process: function(e) {
+        process: function(e, callbackFn) {
             e.detail.id = 'changeTodo';
             e.detail.itemsCount = appData.itemsCount();
             e.detail.selTodos = appData.selectedItems();
@@ -219,7 +217,7 @@ const appEvents = {
             	evttype = 'deleteTodoSuccessNoneSelected';
             }
             else evttype = 'deleteTodoSuccessAllDeleted';
-            return new CustomEvent(evttype);
+            callbackFn(new CustomEvent(evttype));
         }
 
     },
@@ -247,9 +245,13 @@ function handleAppEvent(e, customEventName) {
     stateTransitionsManager(todoEvent);
 };
 
+function handlePostEvent(e) {
+	appEvents[e.type].nextState(e);
+}
+
 function stateTransitionsManager(todoEvent) {
-    var todoEventAft = appEvents[todoEvent.type].process(todoEvent);
-    appEvents[todoEventAft.type].nextState(todoEventAft);
+    var todoEventAft = appEvents[todoEvent.type].process(todoEvent, handlePostEvent);
+    
 }
 
 function createInputTextElement(compNode, props) {
