@@ -132,7 +132,7 @@ const appEvents = {
                 todoText: "",
                 label: "Add a to-do item:"
             };
-            createInputTextElement(props);
+            createInputTextElement(document.getElementById("addTodo"), props);
             return new CustomEvent('onloadSuccess');
         }
     },
@@ -148,7 +148,7 @@ const appEvents = {
             e.detail.todoText = appData.todoText();
             e.detail.itemsCount = appData.itemsCount();
             //e.detail.selTodos = appData.selectedItems();
-            createInputCheckboxElement(e.detail);
+            createInputCheckboxElement(document.getElementById("changeTodo"), e.detail);
 
             var evttype = 'addTodoSuccessNoneSelected';
             if (appData.selectedCount() > 0 &&
@@ -175,9 +175,8 @@ const appEvents = {
         process: function(e) {
             if (document.getElementById("deleteTodo").getElementsByTagName("input").length == 0) {
                 e.detail.id = "deleteTodo";
-                createInputButtonElement(e.detail);
+                createInputButtonElement(document.getElementById("deleteTodo"), e.detail);
             }
-            console.log("??befbef toal "+appData.itemsCount()+" >> selTodos "+appData.selectedItems());
             var evttype = 'changeTodoSuccessNoneSelected';
             if (appData.selectedCount() > 0) {
                 if (appData.selectedCount() == appData.itemsCount()) {
@@ -213,10 +212,8 @@ const appEvents = {
             e.detail.id = 'changeTodo';
             e.detail.itemsCount = appData.itemsCount();
             e.detail.selTodos = appData.selectedItems();
-            console.log(">>bef toal "+appData.itemsCount()+" >> selTodos "+appData.selectedItems());
-            deleteInputCheckboxElements(e.detail);
+            deleteInputCheckboxElements(document.getElementById("changeTodo"), e.detail);
             let evttype = '';
-            console.log(">>aft toal "+appData.itemsCount()+" >> sel "+appData.selectedCount());
             if (appData.itemsCount() > 0 &&
             		appData.selectedCount()==0) {
             	evttype = 'deleteTodoSuccessNoneSelected';
@@ -255,25 +252,21 @@ function stateTransitionsManager(todoEvent) {
     appEvents[todoEventAft.type].nextState(todoEventAft);
 }
 
-function createInputTextElement(props) {
-    var oldNode = document.getElementById(props.id);
-    oldNode.appendChild(createInputTxtElem(props.id, props.label, props.todoText));
+function createInputTextElement(compNode, props) {
+    //var oldNode = document.getElementById(props.id);
+    compNode.appendChild(createInputTxtElem(props.id, props.label, props.todoText));
 }
 
-function createInputCheckboxElement(props) {
+function createInputCheckboxElement(compNode, props) {
 
-    var oldNode = document.getElementById(props.id);
-
-    var maxId = oldNode.getElementsByTagName("input").length + 1;
+    var maxId = compNode.getElementsByTagName("input").length + 1;
     var e = document.createElement("input");
-    oldNode.appendChild(createCheckBoxElement(props.id, props.todoText, props.itemsCount));
+    compNode.appendChild(createCheckBoxElement(props.id, props.todoText, props.itemsCount));
 }
 
-function deleteInputCheckboxElements(props) {
+function deleteInputCheckboxElements(compNode, props) {
 
-    var oldNode = document.getElementById(props.id);
-
-    props.selTodos.forEach(i => oldNode.removeChild(document.getElementById("div" + i)));
+    props.selTodos.forEach(i => compNode.removeChild(document.getElementById("div" + i)));
 }
 
 function createCheckBoxElement(name, label, maxId) {
@@ -314,10 +307,9 @@ function createInputTxtElem(name, label, textValue) {
     return de;
 }
 
-function createInputButtonElement(props) {
+function createInputButtonElement(compNode, props) {
     var buttonComponentHtml = '<input name="deleteTodo" type="button" class="pure-button" value="Delete" onclick="handleAppEvent(event, \'deleteTodo\')">';
-    var oldNode = document.getElementById(props.id);
-    oldNode.innerHTML = buttonComponentHtml;
+    compNode.innerHTML = buttonComponentHtml;
 }
 
 </script>
