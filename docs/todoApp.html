@@ -40,7 +40,7 @@
 			</section>
 			<section id="changeTodoView" style="display: none;">
 			    <p/>
-				<CheckboxGroupComp id="changeTodo" />
+				<CheckboxGroupComp id="changeTodo" maxId="0"/>
 				<p/>
 			</section>
 			<section id="deleteTodoView" style="display: none;">
@@ -126,14 +126,14 @@ const appStates = {
 
 const appEvents = {
     onload: {
-        process: function(e, callbackFn) {
+        process: function(e, handlePostEvent) {
             var props = {
                 id: "addTodo",
                 todoText: "",
                 label: "Add a to-do item:"
             };
             createInputTextElement(document.getElementById("addTodo"), props);
-            callbackFn(new CustomEvent('onloadSuccess'));
+            handlePostEvent(new CustomEvent('onloadSuccess'));
         }
     },
     onloadSuccess: {
@@ -142,7 +142,7 @@ const appEvents = {
         }
     },
     addTodo: {
-        process: function(e, callbackFn) {
+        process: function(e, handlePostEvent) {
 
             e.detail.id = "changeTodo";
             e.detail.todoText = appData.todoText();
@@ -154,7 +154,7 @@ const appEvents = {
                 appData.itemsCount() - appData.selectedCount() > 0) {
                 evttype = 'addTodoSuccessSomeSelected';
             }
-            callbackFn(new CustomEvent(evttype));
+            handlePostEvent(new CustomEvent(evttype));
         }
     },
     addTodoSuccessNoneSelected: {
@@ -171,7 +171,7 @@ const appEvents = {
         }
     },
     changeTodo: {
-        process: function(e, callbackFn) {
+        process: function(e, handlePostEvent) {
             if (document.getElementById("deleteTodo").getElementsByTagName("input").length == 0) {
                 e.detail.id = "deleteTodo";
                 createInputButtonElement(document.getElementById("deleteTodo"), e.detail);
@@ -184,7 +184,7 @@ const appEvents = {
                     evttype = 'changeTodoSuccessSomeSelected';
                 }
             }
-            callbackFn(new CustomEvent(evttype));
+            handlePostEvent(new CustomEvent(evttype));
         }
     },
     changeTodoSuccessSomeSelected: {
@@ -206,7 +206,7 @@ const appEvents = {
         }
     },
     deleteTodo: {
-        process: function(e, callbackFn) {
+        process: function(e, handlePostEvent) {
             e.detail.id = 'changeTodo';
             e.detail.itemsCount = appData.itemsCount();
             e.detail.selTodos = appData.selectedItems();
@@ -217,7 +217,7 @@ const appEvents = {
             	evttype = 'deleteTodoSuccessNoneSelected';
             }
             else evttype = 'deleteTodoSuccessAllDeleted';
-            callbackFn(new CustomEvent(evttype));
+            handlePostEvent(new CustomEvent(evttype));
         }
 
     },
@@ -255,15 +255,15 @@ function stateTransitionsManager(todoEvent) {
 }
 
 function createInputTextElement(compNode, props) {
-    //var oldNode = document.getElementById(props.id);
     compNode.appendChild(createInputTxtElem(props.id, props.label, props.todoText));
 }
 
 function createInputCheckboxElement(compNode, props) {
 
-    var maxId = compNode.getElementsByTagName("input").length + 1;
+    const nextId = Number(compNode.getAttribute("maxId")) + 1;
     var e = document.createElement("input");
-    compNode.appendChild(createCheckBoxElement(props.id, props.todoText, props.itemsCount));
+    compNode.appendChild(createCheckBoxElement(props.id, props.todoText, nextId));
+    compNode.setAttribute("maxId", nextId);
 }
 
 function deleteInputCheckboxElements(compNode, props) {
@@ -271,19 +271,19 @@ function deleteInputCheckboxElements(compNode, props) {
     props.selTodos.forEach(i => compNode.removeChild(document.getElementById("div" + i)));
 }
 
-function createCheckBoxElement(name, label, maxId) {
+function createCheckBoxElement(name, label, nextId) {
     var de = document.createElement("div");
-    de.setAttribute("id", "div" + (maxId + 1));
+    de.setAttribute("id", "div" + nextId);
     var e = document.createElement("input");
 
     e.setAttribute("name", name);
     e.setAttribute("type", "checkbox");
-    e.setAttribute("value", maxId + 1);
+    e.setAttribute("value", nextId);
     e.setAttribute("onchange", "handleAppEvent(event, \'changeTodo\')");
     e = de.appendChild(e);
 
     var lbl = document.createElement("label");
-    lbl.setAttribute("id", "lbl" + (maxId + 1));
+    lbl.setAttribute("id", "lbl" + nextId);
     lbl.innerText = label;
     e.insertAdjacentElement("afterEnd", lbl)
 
