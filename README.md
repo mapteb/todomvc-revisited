@@ -15,7 +15,10 @@ The State transition for each UI action is printed at the top of the above page.
 The following state transitions are implemented:
 
 <pre>
-unknownState                    - onload     - processOnload     - onloadSuccess                 - readyForAdd 
+=================================================================================================================================
+     Initial State              |  Pre-event |   Processor      |      Post-event               |     Final State
+=================================================================================================================================
+uknownState                     - onload     - processOnload     - onloadSuccess                 - readyForAdd 
 readyForAdd                     - addTodo    - processAddTodo    - addTodoSuccessNoneSelected    - readyForAddSelect
 readyForAddSelect               - addTodo    - processAddTodo    - addTodoSuccessNoneSelected    - readyForAddSelect
 readyForAddSelect               - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete 
