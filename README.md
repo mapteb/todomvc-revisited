@@ -31,3 +31,7 @@ readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuc
 readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete
 readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuccessNoneSelected - readyForAddSelect
 </pre>
+
+### More Info
+
+More info about this project is also available at:  [dzone](https://dzone.com/articles/the-todomvc-revisited)
