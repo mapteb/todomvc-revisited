@@ -10,9 +10,19 @@ All the HTML and javascript source needed is in one [todoApp.html](https://raw.g
 
 An online demo of this application is available at the [Todo App](https://mapteb.github.io/todomvc-revisited/todoApp.html).
 
-The State transition for each UI action is printed at the top of the above page.
+### Usage
 
-The following state transitions are implemented:
+To use this framework the following steps are suggested:
+1. Write the state transitions (see the table below for an example)
+2. Configure the states and events in Javascript const variables.
+   See appStates and appEvents in the [HTML file]((https://mapteb.github.io/todomvc-revisited/todoApp.html).
+3. Setup the HTML template,
+   Identify the Comp tags for the application.
+   See the InputComp, CheckboxGroupComp and ButtonComp tags  used in this demo.
+4. Create the helper functions needed for the processors.
+   See the appEvents object for an example.
+
+The state transitions assumed for the demo TodoMVC app are:
 
 <pre>
 =================================================================================================================================
@@ -34,6 +44,13 @@ readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuc
 readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuccessSomeSelected - readyForAddSelectUnselectDelete
 readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuccessNoneSelected - readyForAddSelect
 </pre>
+
+### Salient Features
+
+Some interesting features of the proposed framework include:
+1. Enforces use of state machine and therefore ensures robust application.
+2. The helper functions (like createInputTextElement, createInputCheckboxElement, etc.) that support the processos can be reused in other projects.
+3. The state transitions also serve as a check list of test cases.    
 
 ### More Info
 
