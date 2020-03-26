@@ -10,7 +10,7 @@ All the HTML and javascript source needed is in one [todoApp.html](https://raw.g
 
 An online demo of this application is available at the [Todo App](https://mapteb.github.io/todomvc-revisited/todoApp.html).
 
-### Usage
+## Usage
 
 To use this framework the following steps are suggested:
 1. Write the state transitions (see the table below for an example)
@@ -45,7 +45,7 @@ readyForAddSelectUnselectDelete - changeTodo - processChangeTodo - changeTodoSuc
 readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuccessNoneSelected - readyForAddSelect
 </pre>
 
-### Salient Features
+## Salient Features
 
 Some interesting features of the proposed framework include:
 1. Enforces use of state machine and therefore ensures robust application.
