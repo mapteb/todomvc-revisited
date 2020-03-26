@@ -15,7 +15,7 @@ An online demo of this application is available at the [Todo App](https://mapteb
 To use this framework the following steps are suggested:
 1. Write the state transitions (see the table below for an example)
 2. Configure the states and events in JavaScript const variables.
-   See appStates and appEvents in the [HTML file]((https://mapteb.github.io/todomvc-revisited/todoApp.html).
+   See appStates and appEvents in the [HTML file](https://mapteb.github.io/todomvc-revisited/todoApp.html).
 3. Setup the HTML template,
    Identify the Comp tags for the application.
    See the InputComp, CheckboxGroupComp and ButtonComp tags  used in this demo.
