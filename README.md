@@ -13,6 +13,7 @@ An online demo of this application is available at the [Todo App](https://mapteb
 ## Usage
 
 To use this framework the following steps are suggested:
+
 1. Write the state transitions (see the table below for an example)
 2. Configure the states and events in JavaScript const variables.
    See appStates and appEvents in the [HTML file](https://raw.githubusercontent.com/mapteb/todomvc-revisited/master/docs/todoApp.html).
@@ -48,9 +49,10 @@ readyForAddSelectUnselectDelete - deleteTodo - processDeleteTodo - deleteTodoSuc
 ## Salient Features
 
 Some interesting features of the proposed framework include:
+
 1. Enforces use of state machine and therefore ensures robust application.
-2. The helper functions (like createInputTextElement, createInputCheckboxElement, etc.) that support the processos can be reused in other projects.
-3. The state transitions also serve as a check list of test cases.    
+2. The helper functions (like createInputTextElement, createInputCheckboxElement, etc.) that support the processos can be reused in other projects. he modular nature of these functions suggest maybe these functions could be swapped with web components. See, for instance, the next version of this project - [State Transitions with Web Components](https://github.com/mapteb/state-transitions-with-webcomponents)
+3. The state transitions table serve both as requirements and as a checklist of test cases.
 
 ### More Info
 
